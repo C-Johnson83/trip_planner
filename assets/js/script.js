@@ -1,6 +1,8 @@
 // Map and search section 
 // Location IQ api key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
+var searchRadius = 1000;
+var searchCriteria = "hotel";
 
 // Add layers that we need to the map using built in Unwired
 var streets = L.tileLayer.Unwired({
@@ -32,6 +34,7 @@ var geocoderControl = L.control.geocoder(key, {
     console.log (event);
     var latlng = event.latlng; // Get the latitude and longitude of the selected location
     console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
+fizzyliftingdrinks
     getWeather(latlng)
   });
 
@@ -75,3 +78,5 @@ var geocoderControl = L.control.geocoder(key, {
         humidity.text(`Humidity: ${humidityVal}%`);
     });
 }
+
+  
