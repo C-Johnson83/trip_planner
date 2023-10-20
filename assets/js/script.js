@@ -1,6 +1,8 @@
 ////////// Map and search section //////////
 // Location IQ api key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
+var searchRadius = 1000;
+var searchCriteria = "hotel";
 
 // Add layers that we need to the map using built in Unwired
 var streets = L.tileLayer.Unwired({
@@ -46,13 +48,13 @@ var geocoderControl = L.control.geocoder(key, {
   zoom: 10,
 }).addTo(map);
 
-//   listening event for address selection change and function running on address selection change
-geocoderControl.on('select', function (event) {
-  console.log(event);
-  var latlng = event.latlng; // Get the latitude and longitude of the selected location
-  console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
-  getWeather(latlng)
-});
+//   listening event for address selection change
+  geocoderControl.on('select', function(event) {
+    console.log (event);
+    var latlng = event.latlng; // Get the latitude and longitude of the selected location
+    console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
+    getWeather(latlng)
+  });
 
 
 ////////// Weather Section //////////
@@ -94,3 +96,5 @@ function getWeather(latlng) {
       humidity.text(`Humidity: ${humidityVal}%`);
     });
 }
+
+  
