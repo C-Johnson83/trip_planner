@@ -24,3 +24,10 @@ var geocoderControl = L.control.geocoder(key, {
     position: "topleft",
     zoom: 10,
   }).addTo(map);
+
+//   listening event for address
+  geocoderControl.on('select', function(event) {
+    console.log (event);
+    var latlng = event.latlng; // Get the latitude and longitude of the entered location
+    console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
+  });
