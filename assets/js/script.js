@@ -53,7 +53,8 @@ var geocoderControl = L.control.geocoder(key, {
     console.log (event);
     var latlng = event.latlng; // Get the latitude and longitude of the selected location
     console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
-    getWeather(latlng)
+    getWeather(latlng);
+    nearbyStuff(latlng);
   });
 
 
@@ -96,5 +97,15 @@ function getWeather(latlng) {
       humidity.text(`Humidity: ${humidityVal}%`);
     });
 }
+function nearbyStuff(latlng) {
+ var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
+var nearbyQueryUrl = nearbyUrl+key+'&lat='+latlng.lat+'&lon='+latlng.lng+'&tag=school&radius=1000&format=json';
 
-  
+fetch(nearbyQueryUrl)
+.then(function (response) {
+  return response.json();
+})
+.then(function (data) {
+  console.log(data);
+})
+}
