@@ -67,7 +67,8 @@ searchCriteria.on("change", function () {
     if (layer instanceof L.Marker) {
       map.removeLayer(layer);
     }
-
+    var markLocation = L.marker([parseFloat(latlng.lat), parseFloat(latlng.lng)]).addTo(map);
+    markLocation.bindPopup('hi');
   // Call the nearbyStuff function with the updated criteria
   nearbyStuff(latlng, criteria);
 });
@@ -153,6 +154,7 @@ var favButton = $('<button>', {
 });
 
 favButton.click(function () {
+  icon.empty();
   // Handle the click event (e.g., center the map on the location)
   map.setView([dataToStore.latlng.lat, dataToStore.latlng.lng], 13);
   getWeather(dataToStore.latlng);
@@ -224,7 +226,8 @@ function nearbyStuff(latlng, criteria) {
       map.removeLayer(layer);
     }
   });
-
+  var citymarker = L.marker([parseFloat(latlng.lat), parseFloat(latlng.lng)]).addTo(map);
+  citymarker.bindPopup('hi');
   // Create a custom marker icon for places of interest
   var customIcon = L.icon({
     iconUrl: './assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
