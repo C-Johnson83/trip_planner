@@ -155,8 +155,14 @@ function nearbyStuff(latlng, criteria) {
       address: data[0].address, // Adjust this to match the structure of the data
     };
 
-    // Save the locationInfo object to local storage
-    localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
+  // Retrieve the existing locations from local storage (if any)
+  var savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
+
+  // Add the current location to the array
+  savedLocations.push(locationInfo);
+
+  // Save the updated array back to local storage
+  localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
 
       data.forEach(function (place) {
         // Create markers for each nearby place
