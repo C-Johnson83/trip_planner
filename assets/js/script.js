@@ -4,6 +4,7 @@
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
 var searchRadius = 10000;
 var searchCriteria = $("#interestsInput");
+var reset = $("#reset");
 var criteria = 'all';
 
 // Default coordinates for the map's center
@@ -171,3 +172,8 @@ function nearbyStuff(latlng, criteria) {
       });
     });
 }
+reset.on('click', function(){
+  savedLocations = [];
+  localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+  console.log(savedLocations)
+})
