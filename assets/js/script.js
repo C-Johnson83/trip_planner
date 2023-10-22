@@ -88,6 +88,24 @@ geocoderControl.on('select', function (event) {
   console.log(event);
   // Get the latitude and longitude of the selected location
   var latlng = event.latlng;
+  var placeName = event.feature.name
+criteria = criteria
+
+var dataToStore = {
+  name: placeName,
+  latlng: latlng,
+  criteria: criteria
+};
+
+var selectedData = JSON.parse(localStorage.getItem('selectedData')) || [];
+
+selectedData.push(dataToStore);
+// Store the data as a single JSON string in local storage
+localStorage.setItem('selectedData', JSON.stringify(selectedData));
+
+// Log the data (optional)
+console.log('Data stored:', dataToStore);
+
   icon.empty();
   getWeather(latlng);
   nearbyStuff(latlng, criteria);
@@ -161,24 +179,7 @@ function nearbyStuff(latlng, criteria) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data); // Check the retrieved data
-
-    // Create an object to store the information
-    var locationInfo = {
-      latlng: latlng,
-      name: data[0].display_name, // Assuming the first item in the data array contains the desired name
-      address: data[0].address, // Adjust this to match the structure of the data
-    };
-
-  // Retrieve the existing locations from local storage (if any)
-  var savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
-
-  // Add the current location to the array
-  savedLocations.push(locationInfo);
-
-  // Save the updated array back to local storage
-  localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-
+      console.log('nearby places data',data); // Check the retrieved data
       data.forEach(function (place) {
         // Create markers for each nearby place
         var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: customIcon }).addTo(map);
@@ -186,8 +187,8 @@ function nearbyStuff(latlng, criteria) {
       });
     });
 }
+
 reset.on('click', function(){
-  savedLocations = [];
-  localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-  console.log(savedLocations)
+  selectedData = [];
+  localStorage.setItem('selectedData', JSON.stringify(selectedData));
 })
