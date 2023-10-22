@@ -108,5 +108,9 @@ function nearbyStuff(latlng) {
     })
     .then(function (data) {
       console.log(data);
+      data.forEach(function (place) {
+        var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)]).addTo(map);
+        marker.bindPopup(place.display_name);
+      });
     })
 }
