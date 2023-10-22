@@ -1,26 +1,27 @@
 ////////// Map and search section //////////
-// Location IQ api key
+
+// Location IQ API key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
 var searchRadius = 10000;
 var searchCriteria = $("#interestsInput");
 var criteria = 'all';
-var defaultCenter = [39.8283, -98.5795]; // Your default coordinates
-var latlng = defaultCenter; // Make the default latlng the same as the default center of teh map
 
-// listening event for the input on change
+// Default coordinates for the map's center
+var defaultCenter = [39.8283, -98.5795];
+// Initialize latlng with the default center coordinates
+var latlng = defaultCenter;
+
+// Event listener for the input change
 searchCriteria.on("change", function () {
-  criteria = this.value; // Update the criteria variable
+  // Update the criteria variable with the selected value
+  criteria = this.value;
   console.log(criteria); // Log the selected value
 
-    // Call the nearbyStuff function with the updated criteria
-    nearbyStuff(latlng, criteria);
+  // Call the nearbyStuff function with the updated criteria
+  nearbyStuff(latlng, criteria);
 });
 
-
-
-
-
-// Add layers that we need to the map using built in Unwired
+// Add layers to the map using built-in Unwired
 var streets = L.tileLayer.Unwired({
   key: key,
   scheme: "streets"
@@ -36,26 +37,35 @@ var map = L.map('map', {
 
 // Get the user's location using the Geolocation API
 if ("geolocation" in navigator) {
-  navigator.geolocation.getCurrentPosition(function (position) {
-    var userLat = position.coords.latitude;
-    var userLng = position.coords.longitude;
-    latlng = { lat: userLat, lng: userLng }; // Update latlng with the user's location
-    map.setView([latlng.lat, latlng.lng], 13);
+  navigator.geolocation.getCurrentPosition(
+    // Success callback function
+    function (position) {
+      var userLat = position.coords.latitude;
+      var userLng = position.coords.longitude;
+      // Update latlng with the user's location
+      latlng = { lat: userLat, lng: userLng };
+      map.setView([latlng.lat, latlng.lng], 13);
 
-    // Call the getWeather function with the user's location
-    getWeather(latlng);
+      // Call the getWeather function with the user's location
+      getWeather(latlng);
 
-    // Call the nearbyStuff function with the updated criteria
-    nearbyStuff(latlng, criteria);
-  }, function () {
-    // Set the map center to the default center when geolocation fails or user says no
-    map.setView(defaultCenter, 5);
-  });
+      // Call the nearbyStuff function with the updated criteria
+      nearbyStuff(latlng, criteria);
+    },
+    // Error callback function
+    function (error) {
+      // Log the error message
+      console.log(error.message);
+      // Set the map center to the default center when geolocation fails or user denies access
+      map.setView(defaultCenter, 5);
+    }
+  );
 } else {
   // Set the map center to the default center when geolocation is not available
   map.setView(defaultCenter, 5);
 }
-// Add the autocomplete text box and search using the Location IQ built in geocoder
+
+// Add the autocomplete text box and search using the Location IQ built-in geocoder
 var geocoderControl = L.control.geocoder(key, {
   url: "https://api.locationiq.com/v1",
   expanded: true,
@@ -65,10 +75,11 @@ var geocoderControl = L.control.geocoder(key, {
   zoom: 13,
 }).addTo(map);
 
-//   listening event for address selection change to run the functions
+// Event listener for address selection change to run the functions
 geocoderControl.on('select', function (event) {
   console.log(event);
-  var latlng = event.latlng; // Get the latitude and longitude of the selected location
+  // Get the latitude and longitude of the selected location
+  var latlng = event.latlng;
   icon.empty();
   getWeather(latlng);
   nearbyStuff(latlng, criteria);
@@ -76,6 +87,7 @@ geocoderControl.on('select', function (event) {
 
 
 ////////// Weather Section //////////
+
 // OpenWeather API key
 var weatherApiKey = 'cebdbe1753a5af12101fc266dce79204';
 var weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q="
@@ -87,24 +99,26 @@ var humidity = $('#currentHumidity');
 var count = '8'
 
 function getWeather(latlng) {
-
+  // Construct the weather query URL with latitude and longitude
   var weatherQueryUrl = weatherUrl + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&cnt=' + count + "&appid=" + weatherApiKey + "&units=imperial"; // for the current weather
+
+  // Fetch the weather data
   fetch(weatherQueryUrl)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data); // checking the data
+      console.log(data); // Check the retrieved weather data
       var cityName = data.name;
-      var tempVal = data.main.temp; // get the temp value
-      var windVal = data.wind.speed; // get the wind speed
-      var humidityVal = data.main.humidity; // get the humidity value
-      var dateVal = data.dt; // get the date value
-      var newDate = new Date(dateVal * 1000); // get the date
+      var tempVal = data.main.temp; // Get the temperature value
+      var windVal = data.wind.speed; // Get the wind speed
+      var humidityVal = data.main.humidity; // Get the humidity value
+      var dateVal = data.dt; // Get the date value
+      var newDate = new Date(dateVal * 1000); // Convert the date value
       var date = newDate.toLocaleDateString("en-US");
-      var iconVal = data.weather[0].icon; // get the icon value
-      var iconImage = 'https://openweathermap.org/img/wn/' + iconVal + '@2x.png'; // get the icon image
-      var png = $('<img src="' + iconImage + '">'); // creating the icon image
+      var iconVal = data.weather[0].icon; // Get the icon value
+      var iconImage = 'https://openweathermap.org/img/wn/' + iconVal + '@2x.png'; // Get the icon image
+      var png = $('<img src="' + iconImage + '">'); // Create the icon image
       city.text('Current weather of your destination in ' + cityName + ' is, ' + date);
       png.attr('id', 'weatherIcon');
       icon.append(png);
@@ -116,22 +130,27 @@ function getWeather(latlng) {
 
 function nearbyStuff(latlng, criteria) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
+  // Construct the nearby search query URL
   var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&radius=' + searchRadius + '&format=json';
+
   // Create a custom marker icon for places of interest
   var customIcon = L.icon({
     iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
     iconSize: [48, 48], // Set the size of the icon
     iconAnchor: [16, 32], // Set the anchor point of the icon
   });
+
+  // Fetch nearby locations
   fetch(nearbyQueryUrl)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      console.log(data); // Check the retrieved data
       data.forEach(function (place) {
+        // Create markers for each nearby place
         var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: customIcon }).addTo(map);
         marker.bindPopup(place.display_name);
       });
-    })
+    });
 }
