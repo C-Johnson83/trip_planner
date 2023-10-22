@@ -30,7 +30,7 @@ if ("geolocation" in navigator) {
 
     // Call the getWeather function with the user's location
     getWeather({ lat: userLat, lng: userLng });
-  }, function(error) {
+  }, function (error) {
     console.log("Geolocation request denied or error occurred. Using default center.");
     // Set the map center to the default center when geolocation fails
     map.setView(defaultCenter, 5);
@@ -48,14 +48,15 @@ var geocoderControl = L.control.geocoder(key, {
   zoom: 10,
 }).addTo(map);
 
-//   listening event for address selection change
-  geocoderControl.on('select', function(event) {
-    console.log (event);
-    var latlng = event.latlng; // Get the latitude and longitude of the selected location
-    console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
-    getWeather(latlng);
-    nearbyStuff(latlng);
-  });
+//   listening event for address selection change to run the functions
+geocoderControl.on('select', function (event) {
+  console.log(event);
+  var latlng = event.latlng; // Get the latitude and longitude of the selected location
+  console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
+  icon.empty();
+  getWeather(latlng);
+  nearbyStuff(latlng);
+});
 
 
 ////////// Weather Section //////////
@@ -98,14 +99,14 @@ function getWeather(latlng) {
     });
 }
 function nearbyStuff(latlng) {
- var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
-var nearbyQueryUrl = nearbyUrl+key+'&lat='+latlng.lat+'&lon='+latlng.lng+'&tag=school&radius=1000&format=json';
+  var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=school&radius=1000&format=json';
 
-fetch(nearbyQueryUrl)
-.then(function (response) {
-  return response.json();
-})
-.then(function (data) {
-  console.log(data);
-})
+  fetch(nearbyQueryUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+    })
 }
