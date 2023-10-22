@@ -147,6 +147,17 @@ function nearbyStuff(latlng, criteria) {
     })
     .then(function (data) {
       console.log(data); // Check the retrieved data
+
+    // Create an object to store the information
+    var locationInfo = {
+      latlng: latlng,
+      name: data[0].display_name, // Assuming the first item in the data array contains the desired name
+      address: data[0].address, // Adjust this to match the structure of the data
+    };
+
+    // Save the locationInfo object to local storage
+    localStorage.setItem('locationInfo', JSON.stringify(locationInfo));
+
       data.forEach(function (place) {
         // Create markers for each nearby place
         var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: customIcon }).addTo(map);
