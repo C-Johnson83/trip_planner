@@ -2,22 +2,18 @@
 // Location IQ api key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
 var searchRadius = 10000;
-// var searchCriteria = "hotel";
 var searchCriteria = $("#interestsInput");
-var criteria;
-
+var criteria = 'all';
+var defaultCenter = [39.8283, -98.5795]; // Your default coordinates
+var latlng = defaultCenter; // Make the default latlng the same as the default center of teh map
 
 // listening event for the input on change
 searchCriteria.on("change", function () {
-  // Get the selected value
-  var selectedValue = interestsInput.value;
+  criteria = this.value; // Update the criteria variable
+  console.log(criteria); // Log the selected value
 
-  // Log the selected value
-  console.log("Selected value: " + selectedValue);
-
-  // You can now use the selectedValue in your code as needed
-  // For example, you can update the searchCriteria with the selected value:
-  Criteria = selectedValue;
+    // Call the nearbyStuff function with the updated criteria
+    nearbyStuff(latlng, criteria);
 });
 
 
@@ -31,9 +27,8 @@ var streets = L.tileLayer.Unwired({
 });
 
 // Initialize the map
-var defaultCenter = [39.8283, -98.5795]; // Your default coordinates
 var map = L.map('map', {
-  zoom: 10,
+  zoom: 14,
   scrollWheelZoom: true,
   layers: [streets],
   zoomControl: false,
@@ -44,19 +39,21 @@ if ("geolocation" in navigator) {
   navigator.geolocation.getCurrentPosition(function (position) {
     var userLat = position.coords.latitude;
     var userLng = position.coords.longitude;
-
-    // Set the map center to the user's location
-    map.setView([userLat, userLng], 13);
+    latlng = { lat: userLat, lng: userLng }; // Update latlng with the user's location
+    map.setView([latlng.lat, latlng.lng], 13);
 
     // Call the getWeather function with the user's location
-    getWeather({ lat: userLat, lng: userLng });
-  }, function (error) {
-    console.log("Geolocation request denied or error occurred. Using default center.");
+    getWeather(latlng);
+
+    // Call the nearbyStuff function with the updated criteria
+    nearbyStuff(latlng, criteria);
+  }, function () {
     // Set the map center to the default center when geolocation fails or user says no
     map.setView(defaultCenter, 5);
   });
 } else {
-  console.log("Geolocation is not available in this browser. Using default center.");
+  // Set the map center to the default center when geolocation is not available
+  map.setView(defaultCenter, 5);
 }
 // Add the autocomplete text box and search using the Location IQ built in geocoder
 var geocoderControl = L.control.geocoder(key, {
@@ -65,17 +62,16 @@ var geocoderControl = L.control.geocoder(key, {
   panToPoint: true,
   focus: true,
   position: "topleft",
-  zoom: 10,
+  zoom: 13,
 }).addTo(map);
 
 //   listening event for address selection change to run the functions
 geocoderControl.on('select', function (event) {
   console.log(event);
   var latlng = event.latlng; // Get the latitude and longitude of the selected location
-  console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
   icon.empty();
   getWeather(latlng);
-  nearbyStuff(latlng);
+  nearbyStuff(latlng, criteria);
 });
 
 
@@ -92,7 +88,6 @@ var count = '8'
 
 function getWeather(latlng) {
 
-  console.log(latlng);
   var weatherQueryUrl = weatherUrl + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&cnt=' + count + "&appid=" + weatherApiKey + "&units=imperial"; // for the current weather
   fetch(weatherQueryUrl)
     .then(function (response) {
@@ -119,15 +114,15 @@ function getWeather(latlng) {
     });
 }
 
-function nearbyStuff(latlng) {
+function nearbyStuff(latlng, criteria) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
-  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag='+searchCriteria+'&radius='+searchRadius+'&format=json';
-// Create a custom marker icon for places of interest
-var customIcon = L.icon({
-  iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
-  iconSize: [48, 48], // Set the size of the icon
-  iconAnchor: [16, 32], // Set the anchor point of the icon
-});
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&radius=' + searchRadius + '&format=json';
+  // Create a custom marker icon for places of interest
+  var customIcon = L.icon({
+    iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
+    iconSize: [48, 48], // Set the size of the icon
+    iconAnchor: [16, 32], // Set the anchor point of the icon
+  });
   fetch(nearbyQueryUrl)
     .then(function (response) {
       return response.json();
