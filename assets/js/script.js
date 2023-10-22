@@ -150,7 +150,7 @@ function nearbyStuff(latlng, criteria) {
 
   // Create a custom marker icon for places of interest
   var customIcon = L.icon({
-    iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
+    iconUrl: './assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
     iconSize: [48, 48], // Set the size of the icon
     iconAnchor: [16, 32], // Set the anchor point of the icon
   });
