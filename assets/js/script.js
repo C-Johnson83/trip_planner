@@ -1,7 +1,7 @@
 ////////// Map and search section //////////
 // Location IQ api key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
-var searchRadius = 1000;
+var searchRadius = 10000;
 var searchCriteria = "hotel";
 
 // Add layers that we need to the map using built in Unwired
@@ -26,13 +26,13 @@ if ("geolocation" in navigator) {
     var userLng = position.coords.longitude;
 
     // Set the map center to the user's location
-    map.setView([userLat, userLng], 10);
+    map.setView([userLat, userLng], 13);
 
     // Call the getWeather function with the user's location
     getWeather({ lat: userLat, lng: userLng });
   }, function (error) {
     console.log("Geolocation request denied or error occurred. Using default center.");
-    // Set the map center to the default center when geolocation fails
+    // Set the map center to the default center when geolocation fails or user says no
     map.setView(defaultCenter, 5);
   });
 } else {
@@ -101,7 +101,7 @@ function getWeather(latlng) {
 
 function nearbyStuff(latlng) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
-  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=school&radius=1000&format=json';
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag='+searchCriteria+'&radius='+searchRadius+'&format=json';
 // Create a custom marker icon for places of interest
 var customIcon = L.icon({
   iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
