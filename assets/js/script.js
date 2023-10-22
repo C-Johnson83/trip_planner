@@ -18,9 +18,16 @@ searchCriteria.on("change", function () {
   criteria = this.value;
   console.log(criteria); // Log the selected value
 
+  // Clear the markers from the map
+  map.eachLayer(function (layer) {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+
   // Call the nearbyStuff function with the updated criteria
   nearbyStuff(latlng, criteria);
 });
+})
 
 // Add layers to the map using built-in Unwired
 var streets = L.tileLayer.Unwired({
@@ -45,7 +52,7 @@ if ("geolocation" in navigator) {
       var userLng = position.coords.longitude;
       // Update latlng with the user's location
       latlng = { lat: userLat, lng: userLng };
-      map.setView([latlng.lat, latlng.lng], 13);
+      map.setView([latlng.lat, latlng.lng], 14);
 
       // Call the getWeather function with the user's location
       getWeather(latlng);
@@ -73,7 +80,7 @@ var geocoderControl = L.control.geocoder(key, {
   panToPoint: true,
   focus: true,
   position: "topleft",
-  zoom: 13,
+  zoom: 14,
 }).addTo(map);
 
 // Event listener for address selection change to run the functions
@@ -132,7 +139,14 @@ function getWeather(latlng) {
 function nearbyStuff(latlng, criteria) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
   // Construct the nearby search query URL
-  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&radius=' + searchRadius + '&format=json';
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&limit=30&radius=' + searchRadius + '&format=json';
+
+  // Clear the markers from the map
+  map.eachLayer(function (layer) {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
 
   // Create a custom marker icon for places of interest
   var customIcon = L.icon({
