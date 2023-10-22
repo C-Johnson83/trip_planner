@@ -98,10 +98,16 @@ function getWeather(latlng) {
       humidity.text(`Humidity: ${humidityVal}%`);
     });
 }
+
 function nearbyStuff(latlng) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
   var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=school&radius=1000&format=json';
-
+// Create a custom marker icon for places of interest
+var customIcon = L.icon({
+  iconUrl: '/assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
+  iconSize: [48, 48], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
   fetch(nearbyQueryUrl)
     .then(function (response) {
       return response.json();
@@ -109,7 +115,7 @@ function nearbyStuff(latlng) {
     .then(function (data) {
       console.log(data);
       data.forEach(function (place) {
-        var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)]).addTo(map);
+        var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: customIcon }).addTo(map);
         marker.bindPopup(place.display_name);
       });
     })
