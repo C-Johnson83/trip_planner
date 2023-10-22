@@ -2,7 +2,27 @@
 // Location IQ api key
 var key = "pk.ab52d604f1e0511146ebe97634a5b6d7";
 var searchRadius = 10000;
-var searchCriteria = "hotel";
+// var searchCriteria = "hotel";
+var searchCriteria = $("#interestsInput");
+var criteria;
+
+
+// listening event for the input on change
+searchCriteria.on("change", function () {
+  // Get the selected value
+  var selectedValue = interestsInput.value;
+
+  // Log the selected value
+  console.log("Selected value: " + selectedValue);
+
+  // You can now use the selectedValue in your code as needed
+  // For example, you can update the searchCriteria with the selected value:
+  Criteria = selectedValue;
+});
+
+
+
+
 
 // Add layers that we need to the map using built in Unwired
 var streets = L.tileLayer.Unwired({
