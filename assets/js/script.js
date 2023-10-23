@@ -27,6 +27,32 @@ var geocoderControl = L.control.geocoder(key, {
     zoom: 10,
   }).addTo(map);
 
+function readFavoritesFromStorage() {
+    var favorite = localStorage.getItem('favorite');
+    if (favorite) {
+        favorite = JSON.parse(favorite);
+    } else {
+        favorite = [];
+    }
+    return favorite;
+}
+
+function saveFavoriteToStorage() {
+    localStorage.setItem('favorite', JSON.stringify(favorite));
+}
+
+function printFavoriteData() {
+    favoriteDisplayEl.empty();
+    var favorite = readFavoritesFromStorage();
+    for (var i = 0; i < favorite.length; i += 1) {
+        var favorite = favorite[i];
+        var rowEl = $('<tr>');
+        var nameEl = $('<tr>').text(favorite.name);
+        var poiEl = $('<td>').text(favorite.$(searchCriteria));
+    }
+}
+
+
 //   listening event for address
   geocoderControl.on('select', function(event) {
     console.log (event);
