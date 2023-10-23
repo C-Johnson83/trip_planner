@@ -71,7 +71,7 @@ searchCriteria.on("change", function () {
 var map = L.map('map', {
   zoom: 14,
   scrollWheelZoom: true,
-  layers: [CartoDB_DarkMatter],
+  layers: [streetmap],
   zoomControl: false,
 });
 
@@ -400,16 +400,24 @@ function nearbyStuff(latlng, criteria) {
 function repoReapersAway(latlng) {
   var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
   var polyline;
-
-  var startInput = [-83.5085, 31.4505];
-  var drivingQueryUrl = drivingUrl + startInput + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      // Success callback function
+      function (position) {
+        var userLat = position.coords.latitude;
+        var userLng = position.coords.longitude;
+        // Update latlng with the user's location
+        userLocationLngLat = {  lng: userLng, lat: userLat, };
+      
+  // var userLocationLngLat = [-83.5085, 31.4505];
+  var drivingQueryUrl = drivingUrl + userLocationLngLat.lng+ ',' + userLocationLngLat.lat + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
 
   // Remove the old polyline if it exists
   if (polyline) {
     map.removeLayer(polyline);
   }
 
-  startingPointMarker = L.marker(startInput).addTo(map).bindPopup("Start the trip here");
+  startingPointMarker = L.marker(userLocationLngLat).addTo(map).bindPopup("Start the trip here");
   endingPointMarker = L.marker([latlng.lng, latlng.lat]).addTo(map).bindPopup("End the trip here");
 
   fetch(drivingQueryUrl)
@@ -428,15 +436,17 @@ function repoReapersAway(latlng) {
       // Add coordinates to the polylineCoordinates array
       coordinates.forEach(function (coordinate) {
         polylineCoordinates.push([coordinate[1], coordinate[0]]);
+        
+        // Create the polyline using the coordinates
+        polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
+        var steps = data.routes[0].legs[0].steps;
+        showDirections(steps)
       });
-
-      // Create the polyline using the coordinates
-      polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
-      var steps = data.routes[0].legs[0].steps;
-      showDirections(steps)
+      });
     });
-  }
+  }}
 
+// Function to get the driving directions
 function showDirections(steps) {
   
   directionsList.innerHTML = ''; // Clear previous directions
@@ -448,7 +458,6 @@ function showDirections(steps) {
 
     var li = document.createElement('li');
     li.textContent = `Step ${index + 1}: Travel along ${road} for ${distance} meters for about ${duration} seconds`;
-    console.log(li);
     directionsList.append(li);
   });
 }
