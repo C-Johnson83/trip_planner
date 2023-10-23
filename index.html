@@ -11,36 +11,29 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body>
-    <header>
-        Trip planner
+<body style="background-color: aquamarine;">
+    <header class="title">
+        <h1>Trip planner</h1>
     </header>
-    <main class="row ">
-        <section class="col-2" id="searchedArea">
-            <p>Favorite Searches</p>
-            <button id="reset">Reset Favorites</button>
-            <div id="favorites">
+
+    <main class="row">
+        <section class="col-2">
+                <div id="weatherBar" >
+                    <div id="weather">
+                        <h3 id="currentCity">-City-</h3>
+                        <p id="currentTemp">-Temperature-</p>
+                        <p id="currentWind">-Wind-</p>
+                        <p id="currentHumidity">-Humidity-</p>
+                        <div id="iconCurrent"></div>
+                    </div>
+                </div>
         </section>
         
-        <aside class="col-7" id="mapContainer">
-            <div id="weatherBar" >
-                <div id="weather">
-                    <h3 id="currentCity">-City-</h3>
-                    <p id="currentTemp">-Temperature-</p>
-                    <p id="currentWind">-Wind-</p>
-                    <p id="currentHumidity">-Humidity-</p>
-                    <div id="iconCurrent"></div>
-                </div>
-                
-            </div>
+        <aside class="col-8" id="mapContainer">
             <div id="map"></div>
-          
-        </aside>
-        <section id="accommodations" class="col-3">
             <div id="interests">
-                <p>Select your place of interest</p>
                 <select id="interestsInput">
-                    <option value="" disabled selected>Select a format...</option>
+                    <option value="" disabled selected>Points of Interest...</option>
                     <option value="all">all</option>
                     <option value="airport">airport</option>
                     <option value="restaurant">restaurant</option>
@@ -65,9 +58,15 @@
                     <option value="parking">parking</option>
                     <option value="cardealer">cardealer</option>
                   </select>
-
             </div>
+        </aside>
+
+        <section id="searchedArea" class="col-2">
+            <h4>Searched Loacations</h4>
+            <button id="reset">Reset Locations</button>
+            <div id="favorites">
         </section>
+        
         <section id="directions" hidden>
             <ul id="directionsList"></ul>
           </section>
