@@ -1,7 +1,23 @@
-    #map {
-        height: 600px;
-        width: 95%;
-        border-style: solid;
-        border-radius: 15px;
-    }
- 
+     body {
+         background-color: aquamarine;
+     }
+
+     #map {
+         height: 600px;
+         width: 100%;
+         border-style: solid;
+         border-radius: 15px;
+     }
+
+     .title {
+         text-align: center;
+         background-color: gray;
+         color: white;
+         padding: 10px;
+         font-family: arial;
+     }
+
+     #reset {
+         background-color: red;
+         border-color: red;
+     }

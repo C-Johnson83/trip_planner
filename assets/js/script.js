@@ -13,9 +13,10 @@ var poiAddBtn = $('#interestAdd');
 
 // Default coordinates for the map's center
 var defaultCenter = [39.8283, -98.5795]; // center of the united states
+var userLocationLngLat;
 
 // Initialize latlng with the default center coordinates
-var latlng = defaultCenter;
+var latlng;
 var directions = $("#directions");
 var showDirectionsButton = $("#showDirections");
 var directionsList = $('#directionsList');
@@ -93,7 +94,7 @@ if ("geolocation" in navigator) {
 
       // Update latlng variable with the user's location
       latlng = { lat: userLat, lng: userLng };
-
+      userLocationLngLat = { lat: userLat, lng: userLng }
       // Set the view of the map to the users location
       map.setView([latlng.lat, latlng.lng], 12);
 
@@ -126,31 +127,6 @@ var geocoderControl = L.control.geocoder(key, {
   zoom: 15,
 }).addTo(map);
 
-// function readFavoritesFromStorage() {
-//     var favorite = localStorage.getItem('favorite');
-//     if (favorite) {
-//         favorite = JSON.parse(favorite);
-//     } else {
-//         favorite = [];
-//     }
-//     return favorite;
-// }
-
-// function saveFavoriteToStorage() {
-//     localStorage.setItem('favorite', JSON.stringify(favorite));
-// }
-
-// function printFavoriteData() {
-//     favoriteDisplayEl.empty();
-//     var favorite = readFavoritesFromStorage();
-//     for (var i = 0; i < favorite.length; i += 1) {
-//         var favorite = favorite[i];
-//         var rowEl = $('<tr>');
-//         var nameEl = $('<tr>').text(favorite.name);
-//         var poiEl = $('<td>').text(favorite.$(searchCriteria));
-//     }
-// }
-
 poiAddBtn.click(function(event) {
     console.log(event);
     var val = " ";
@@ -161,20 +137,6 @@ poiAddBtn.click(function(event) {
     if (option.value == val) {
         $(interests).append(option.text);
         console.log("There: " + a.option);
-
-    }}
-    // selectPOI = document.querySelector('#interestsInput').textContent;
-    // output = selectPOI.textContent;
-    // var poiEl = $('<p></p>').text(document.querySelector('#interestsInput').textContent.selected);
-    // $(interests).append(poiEl);
-        // text: select.option.value,
-});
-
-
-
-
-
-
 
 //   listening event for address
   geocoderControl.on('select', function(event) {
@@ -197,7 +159,7 @@ poiAddBtn.click(function(event) {
 geocoderControl.on('select', function (event) {
   console.log("Pizza" + event);
   // Get the latitude and longitude of the selected location
-  var latlng = event.latlng;
+ latlng = event.latlng;
   var placeName = event.feature.name
   criteria = criteria
   
@@ -476,45 +438,25 @@ function getWeather(latlng) {
     });
 }
 
+function repoReapersAway(latlng) {
+  var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
+  var polyline;
 
+      // Extract the coordinates from the GeoJSON response
+      var coordinates = data.routes[0].geometry.coordinates;
 
-// function repoReapersAway(latlng) {
-//   var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
-//   var polyline;
-//   var userLocationLngLat = {lng: -83.5085, lat: 31.4505};
+      // Create an empty array to store polyline coordinates
+      var polylineCoordinates = [];
 
-//   var drivingQueryUrl = drivingUrl + userLocationLngLat.lng+ ',' + userLocationLngLat.lat + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
-
-//   // Remove the old polyline if it exists
-//   if (polyline) {
-//     map.removeLayer(polyline);
-//   }
-
-//   startingPointMarker = L.marker(userLocationLngLat).addTo(map).bindPopup("Start the trip here");
-//   endingPointMarker = L.marker([latlng.lng, latlng.lat]).addTo(map).bindPopup("End the trip here");
-
-// fetch(drivingQueryUrl)
-//     .then(function (response) {
-//       return response.json();
-//     })
-//     .then(function (data) {
-//       console.log("driving data", data);
-
-      // // Extract the coordinates from the GeoJSON response
-      // var coordinates = data.routes[0].geometry.coordinates;
-
-      // // Create an empty array to store polyline coordinates
-      // var polylineCoordinates = [];
-
-      // // Add coordinates to the polylineCoordinates array
-      // coordinates.forEach(function (coordinate) {
-      //   polylineCoordinates.push([coordinate[1], coordinate[0]]);
+      // Add coordinates to the polylineCoordinates array
+      coordinates.forEach(function (coordinate) {
+        polylineCoordinates.push([coordinate[1], coordinate[0]]);
         
-      //   // Create the polyline using the coordinates
-      //   polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
-      // });
-//     });
-// }
+        // Create the polyline using the coordinates
+        polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
+      });
+    });
+}
 
 reset.on('click', function () {
   selectedData = [];
