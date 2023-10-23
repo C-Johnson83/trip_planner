@@ -153,12 +153,15 @@ var geocoderControl = L.control.geocoder(key, {
 
 poiAddBtn.click(function(event) {
     console.log(event);
-    var val = "";
+    var val = " ";
     var a = document.getElementById("interestsInput");
-    for (var i = 0; i < a.clientHeight; i++) {
+    for (var i = 0; i < a.length; i++) {
         var option = a.options[i];
+        console.log("Here: " + a.options);
     if (option.value == val) {
         $(interests).append(option.text);
+        console.log("There: " + a.option);
+
     }}
     // selectPOI = document.querySelector('#interestsInput').textContent;
     // output = selectPOI.textContent;
