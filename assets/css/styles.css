@@ -1,38 +1,6 @@
-
-body {
-
-    color: black;
-    background-image: linear-gradient(to right, lightblue, blue, black);
-    } 
-    
-    header {
-        border-style: solid;
-        background-image: linear-gradient(to right, lightgreen, green, black);
-        color: rgb(0, 0, 0);
-        font-weight: bold;
-    }
-    
     #map {
         height: 600px;
         width: 95%;
         border-style: solid;
     }
     
-    main {
-        margin: 15px;
-        display: flex;
-        flex-direction: row;
-    
-    }
-    #searchArea {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    }
-    p {
-        color: white;
-    }
-    
-    #accommodations {
-        padding: 15px;
-    }
