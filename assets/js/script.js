@@ -32,10 +32,15 @@ var searchCriteria = $("#interestsInput");
 var reset = $("#reset");
 var criteria = 'all';
 var favorites = $('#favorites');
+
 // Default coordinates for the map's center
-var defaultCenter = [39.8283, -98.5795];
+var defaultCenter = [39.8283, -98.5795]; // center of the united states
+
 // Initialize latlng with the default center coordinates
 var latlng = defaultCenter;
+var directions = $("#directions");
+var showDirectionsButton = $("#showDirections");
+var directionsList = $('#directionsList');
 
 // Event listener for the input change
 searchCriteria.on("change", function () {
@@ -420,15 +425,32 @@ function repoReapersAway(latlng) {
       });
 
       // Create the polyline using the coordinates
-      polyline = L.polyline(polylineCoordinates, { color: 'blue' }).addTo(map);
+      polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
+      var steps = data.routes[0].legs[0].steps;
+      showDirections(steps)
     });
+  }
+
+function showDirections(steps) {
+  
+  directionsList.innerHTML = ''; // Clear previous directions
+
+  steps.forEach(function (step, index) {
+    var road = step.name; // Get the road information
+    var distance = step.distance; // Get the distance
+    var duration = step.duration; // Get the duration
+
+    var li = document.createElement('li');
+    li.textContent = `Step ${index + 1}: Travel along ${road} for ${distance} meters for about ${duration} seconds`;
+    console.log(li);
+    directionsList.append(li);
+  });
 }
 
+showDirectionsButton.on('click', function () {
+  directions.attr("hidden", false);
 
-
-
-
-
+})
 
 reset.on('click', function () {
   selectedData = [];
