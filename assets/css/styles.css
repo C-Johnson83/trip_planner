@@ -12,3 +12,8 @@
         padding: 10px;
         font-family: arial;
     }
+
+    #reset {
+        background-color: red;
+        border-color: red;
+    }
