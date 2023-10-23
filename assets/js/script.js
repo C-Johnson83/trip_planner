@@ -60,7 +60,7 @@ searchCriteria.on("change", function () {
 var map = L.map('map', {
   zoom: 14,
   scrollWheelZoom: true,
-  layers: [Esri_WorldImagery],
+  layers: [CartoDB_DarkMatter],
   zoomControl: false,
 });
 
