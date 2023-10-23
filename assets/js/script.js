@@ -218,7 +218,7 @@ function getWeather(latlng) {
 function nearbyStuff(latlng, criteria) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
   // Construct the nearby search query URL
-  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&limit=30&radius=' + searchRadius + '&format=json';
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&limit=50&radius=' + searchRadius + '&format=json';
 
   // Clear the markers from the map
   map.eachLayer(function (layer) {
@@ -228,23 +228,67 @@ function nearbyStuff(latlng, criteria) {
   });
   var citymarker = L.marker([parseFloat(latlng.lat), parseFloat(latlng.lng)]).addTo(map);
   citymarker.bindPopup('hi');
-  // Create a custom marker icon for places of interest
-  var customIcon = L.icon({
-    iconUrl: './assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
-    iconSize: [48, 48], // Set the size of the icon
-    iconAnchor: [16, 32], // Set the anchor point of the icon
-  });
-
+  
   // Fetch nearby locations
   fetch(nearbyQueryUrl)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log('nearby places data',data); // Check the retrieved data
-      data.forEach(function (place) {
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    console.log('nearby places data',data); // Check the retrieved data
+    data.forEach(function (place) {
+        console.log(place.type)
+
+// Create a custom marker icon for places of interest
+
+var churchIcon = L.icon({
+  iconUrl: './assets/images/icons8-church-50.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+var cinemaIcon = L.icon({
+  iconUrl: './assets/images/icons8-documentary-64.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+var hospitalIcon = L.icon({
+  iconUrl: './assets/images/icons8-hospital-64.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+var hotelIcon = L.icon({
+  iconUrl: './assets/images/icons8-hotel-64.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+var bankIcon = L.icon({
+  iconUrl: './assets/images/icons8-bank-48.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+var customIcon = L.icon({
+  iconUrl: './assets/images/icons8-drop-of-blood-48.png', // Replace with the path to your custom marker image
+  iconSize: [32, 32], // Set the size of the icon
+  iconAnchor: [16, 32], // Set the anchor point of the icon
+});
+
+
+      if (place.type == 'place_of_worship') {
+        mapIcon = churchIcon;
+      } else if (place.type == 'cinema') {
+        mapIcon = cinemaIcon;
+      } else if(place.type == 'hospital') {
+        mapIcon = hospitalIcon;
+      } else if(place.type == 'hotel') {
+        mapIcon = hotelIcon;
+      } else if(place.type == 'bank') {
+        mapIcon = bankIcon;
+      } else {
+        mapIcon = customIcon
+      }
+        
         // Create markers for each nearby place
-        var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: customIcon }).addTo(map);
+        var marker = L.marker([parseFloat(place.lat), parseFloat(place.lon)], { icon: mapIcon }).addTo(map);
         marker.bindPopup(place.display_name);
       });
     });
