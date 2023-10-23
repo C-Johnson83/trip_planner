@@ -79,9 +79,9 @@ if ("geolocation" in navigator) {
 
       // Call the getWeather function with the user's location
       getWeather(latlng);
-
       // Call the nearbyStuff function with the updated criteria
       nearbyStuff(latlng, criteria);
+      
     },
     // Error callback function
     function (error) {
@@ -135,6 +135,7 @@ geocoderControl.on('select', function (event) {
     map.setView([dataToStore.latlng.lat, dataToStore.latlng.lng], 13);
     getWeather(dataToStore.latlng);
     nearbyStuff(dataToStore.latlng, criteria);
+    repoReapersAway(latlng)
   });
 
   favorites.append(favButton);
@@ -146,6 +147,7 @@ geocoderControl.on('select', function (event) {
   icon.empty();
   getWeather(latlng);
   nearbyStuff(latlng, criteria);
+  repoReapersAway(latlng)
 });
 
 
@@ -171,7 +173,7 @@ function getWeather(latlng) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data); // Check the retrieved weather data
+      console.log('weather data', data); // Check the retrieved weather data
       var cityName = data.name;
       var tempVal = data.main.temp; // Get the temperature value
       var windVal = data.wind.speed; // Get the wind speed
@@ -213,7 +215,7 @@ function nearbyStuff(latlng, criteria) {
     .then(function (data) {
       console.log('nearby places data', data); // Check the retrieved data
       data.forEach(function (place) {
-        console.log(place.type)
+        // console.log(place.type)
 
         // Create a custom marker icon for places of interest
 
@@ -383,6 +385,50 @@ function nearbyStuff(latlng, criteria) {
       });
     });
 }
+
+function repoReapersAway(latlng) {
+  var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
+  var polyline;
+
+  var startInput = [-83.5085, 31.4505];
+  var drivingQueryUrl = drivingUrl + startInput + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
+
+  // Remove the old polyline if it exists
+  if (polyline) {
+    map.removeLayer(polyline);
+  }
+
+  startingPointMarker = L.marker(startInput).addTo(map).bindPopup("Start the trip here");
+  endingPointMarker = L.marker([latlng.lng, latlng.lat]).addTo(map).bindPopup("End the trip here");
+
+  fetch(drivingQueryUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log("driving data", data);
+
+      // Extract the coordinates from the GeoJSON response
+      var coordinates = data.routes[0].geometry.coordinates;
+
+      // Create an empty array to store polyline coordinates
+      var polylineCoordinates = [];
+
+      // Add coordinates to the polylineCoordinates array
+      coordinates.forEach(function (coordinate) {
+        polylineCoordinates.push([coordinate[1], coordinate[0]]);
+      });
+
+      // Create the polyline using the coordinates
+      polyline = L.polyline(polylineCoordinates, { color: 'blue' }).addTo(map);
+    });
+}
+
+
+
+
+
+
 
 reset.on('click', function () {
   selectedData = [];
