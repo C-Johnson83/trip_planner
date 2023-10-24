@@ -11,24 +11,24 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body">
+<body>
     <header class="title">
         <h1>Trip planner</h1>
     </header>
 
     <main class="row">
         <section class="col-2">
-                <div id="weatherBar" >
-                    <div id="weather">
-                        <h3 id="currentCity">-City-</h3>
-                        <p id="currentTemp">-Temperature-</p>
-                        <p id="currentWind">-Wind-</p>
-                        <p id="currentHumidity">-Humidity-</p>
-                        <div id="iconCurrent"></div>
-                    </div>
+            <div id="weatherBar">
+                <div id="weather">
+                    <h3 id="currentCity">-City-</h3>
+                    <p id="currentTemp">-Temperature-</p>
+                    <p id="currentWind">-Wind-</p>
+                    <p id="currentHumidity">-Humidity-</p>
+                    <div id="iconCurrent"></div>
                 </div>
+            </div>
         </section>
-        
+
         <aside class="col-8" id="mapContainer">
             <div id="map"></div>
             <div id="interests">
@@ -57,24 +57,25 @@
                     <option value="stadium">stadium</option>
                     <option value="parking">parking</option>
                     <option value="cardealer">cardealer</option>
-                  </select>
+                </select>
             </div>
         </aside>
 
         <section id="searchedArea" class="col-2">
-            <h4>Searched Loacations</h4>
+            <h4>Searched Locations</h4>
             <button id="reset">Reset Locations</button>
             <div id="favorites">
         </section>
-        
+
         <section id="directions" hidden>
             <ul id="directionsList"></ul>
-          </section>
+        </section>
     </main>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.3/leaflet.js"></script>
     <script type="text/javascript" src="https://tiles.locationiq.com/v3/js/liq-styles-ctrl-leaflet.js?v=0.1.8"></script>
-    <script src="https://tiles.locationiq.com/v3/libs/leaflet-geocoder/1.9.6/leaflet-geocoder-locationiq.min.js"></script>
+    <script
+        src="https://tiles.locationiq.com/v3/libs/leaflet-geocoder/1.9.6/leaflet-geocoder-locationiq.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.0.2/control/Permalink.js"></script>
 
 
