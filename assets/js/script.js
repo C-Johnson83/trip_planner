@@ -409,15 +409,11 @@ function getWeather(latlng) {
 
 function repoReapersAway(latlng) {
   var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
-  var polyline;
+ 
   
 
   var drivingQueryUrl = drivingUrl + userLocationLngLat.lng+ ',' + userLocationLngLat.lat + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
 
-  // Remove the old polyline if it exists
-  if (polyline) {
-    map.removeLayer(polyline);
-  }
 
   startingPointMarker = L.marker(userLocationLngLat).addTo(map).bindPopup("Start the trip here");
   endingPointMarker = L.marker([latlng.lng, latlng.lat]).addTo(map).bindPopup("End the trip here");
@@ -429,21 +425,10 @@ fetch(drivingQueryUrl)
     .then(function (data) {
       console.log("driving data", data);
 
-      // Extract the coordinates from the GeoJSON response
-      var coordinates = data.routes[0].geometry.coordinates;
-
-      // Create an empty array to store polyline coordinates
-      var polylineCoordinates = [];
-
-      // Add coordinates to the polylineCoordinates array
-      coordinates.forEach(function (coordinate) {
-        polylineCoordinates.push([coordinate[1], coordinate[0]]);
-        
-        // Create the polyline using the coordinates
-        polyline = L.polyline(polylineCoordinates, { color: 'red' }).addTo(map);
+      
       });
-    });
-}
+    };
+
 
 reset.on('click', function () {
   selectedData = [];
