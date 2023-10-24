@@ -55,8 +55,6 @@ searchCriteria.on("change", function () {
   // Update the criteria variable with the selected value
   criteria = this.value;
 
-
-
   // Clear the markers from the map
   map.eachLayer(function (layer) {
     if (layer instanceof L.Marker) {
@@ -123,13 +121,13 @@ var geocoderControl = L.control.geocoder(key, {
   panToPoint: true,
   focus: true,
   position: "topleft",
-  zoom: 15,
+  zoom: 13,
 }).addTo(map);
 
 //   listening event for address
   geocoderControl.on('select', function(event) {
     console.log (event);
-    var latlng = event.latlng; // Get the latitude and longitude of the entered location
+    latlng = event.latlng; // Get the latitude and longitude of the entered location
     console.log('Latitude:', latlng.lat, 'Longitude:', latlng.lng);
     console.log('Place ID:', event.feature.feature.place_id);
     var settings = {
