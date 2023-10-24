@@ -18,7 +18,7 @@ var latlng;
 var directions = $("#directions");
 var showDirectionsButton = $("#showDirections");
 var directionsList = $('#directionsList');
-
+var dataToStore
 // Create the map layers
 var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -105,7 +105,7 @@ if ("geolocation" in navigator) {
       // Log the error message
       console.log(error.message);
       // Set the view of the map to the default center when geolocation fails or user denies access
-      map.setView(defaultCenter, 17);
+      map.setView(defaultCenter, 12);
     }
   );
 } else {
@@ -125,13 +125,12 @@ var geocoderControl = L.control.geocoder(key, {
 
 // Event listener for address selection change to run the functions
 geocoderControl.on('select', function (event) {
-  console.log(event);
   // Get the latitude and longitude of the selected location
  latlng = event.latlng;
   var placeName = event.feature.name
   criteria = criteria
   
-  var dataToStore = {
+  dataToStore = {
     name: placeName,
     latlng: latlng,
     criteria: criteria
@@ -151,16 +150,14 @@ geocoderControl.on('select', function (event) {
     // Handle the click event (e.g., center the map on the location)
     map.setView([dataToStore.latlng.lat, dataToStore.latlng.lng], 13);
     getWeather(dataToStore.latlng);
-    nearbyStuff(dataToStore.latlng, criteria);
+    latlng = dataToStore.latlng;
+    criteria = dataToStore.criteria;
+    nearbyStuff(latlng, criteria);
     repoReapersAway(latlng)
   });
 
   favorites.append(favButton);
-  
-  
-  // Log the data (optional)
-  console.log('Data stored:', dataToStore);
-  
+
   icon.empty();
   getWeather(latlng);
   nearbyStuff(latlng, criteria);
@@ -173,7 +170,7 @@ geocoderControl.on('select', function (event) {
 function nearbyStuff(latlng, criteria) {
   var nearbyUrl = 'https://us1.locationiq.com/v1/nearby?key='
   // Construct the nearby search query URL
-  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&limit=50&radius=' + searchRadius + '&format=json';
+  var nearbyQueryUrl = nearbyUrl + key + '&lat=' + latlng.lat + '&lon=' + latlng.lng + '&tag=' + criteria + '&limit=30&radius=' + searchRadius + '&format=json';
 
   // Clear the markers from the map
   map.eachLayer(function (layer) {
@@ -182,7 +179,7 @@ function nearbyStuff(latlng, criteria) {
     }
   });
   var citymarker = L.marker([parseFloat(latlng.lat), parseFloat(latlng.lng)]).addTo(map);
-  citymarker.bindPopup('hi');
+  citymarker.bindPopup('Destination');
 
   // Fetch nearby locations
   fetch(nearbyQueryUrl)
@@ -192,10 +189,7 @@ function nearbyStuff(latlng, criteria) {
     .then(function (data) {
       console.log('nearby places data', data); // Check the retrieved data
       data.forEach(function (place) {
-        // console.log(place.type)
-
         // Create a custom marker icon for places of interest
-
         var airportIcon = L.icon({
           iconUrl: './assets/images/icons8-airplane-48.png', // Replace with the path to your custom marker image
           iconSize: [32, 32], // Set the size of the icon
