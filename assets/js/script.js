@@ -421,8 +421,6 @@ function getWeather(latlng) {
     });
 }
 
-
-
 function repoReapersAway(latlng) {
   var drivingUrl = 'https://us1.locationiq.com/v1/directions/driving/';
   var polyline;
