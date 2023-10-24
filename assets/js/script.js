@@ -396,7 +396,7 @@ function getWeather(latlng) {
       var iconVal = data.weather[0].icon; // Get the icon value
       var iconImage = 'https://openweathermap.org/img/wn/' + iconVal + '@2x.png'; // Get the icon image
       var png = $('<img src="' + iconImage + '">'); // Create the icon image
-      city.text('Current weather of your destination in ' + cityName + ' is, ' + date);
+      city.text(date + '\n The current weather in ' + cityName + ' is: ');
       png.attr('id', 'weatherIcon');
       icon.append(png);
       temp.text(`Temperature: ${tempVal + '°F'}`);
@@ -412,7 +412,7 @@ function repoReapersAway(latlng) {
   var polyline;
   
 
-  var drivingQueryUrl = drivingUrl + userLocationLngLat.lng+ ',' + userLocationLngLat.lat + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
+  var drivingQueryUrl = drivingUrl + userLocationLngLat.lng + ',' + userLocationLngLat.lat + ';' + latlng.lng + ',' + latlng.lat + "?key=" + key + '&steps=true&alternatives=true&geometries=geojson&overview=full';
 
   // Remove the old polyline if it exists
   if (polyline) {
@@ -450,3 +450,24 @@ reset.on('click', function () {
   favorites.empty();
   localStorage.setItem('selectedData', JSON.stringify(selectedData));
 })
+
+function fromLocalStorage() {
+  var storedData = JSON.parse(localStorage.getItem('selectedData'));
+  if (Array.isArray(storedData)) {
+    storedData.forEach(function (data) {
+      var favButton = $('<button>', {
+        text: data.name,
+      });
+      favButton.click(function () {
+        icon.empty();
+        // Handle the click event (e.g., center the map on the location)
+        map.setView([data.latlng.lat, data.latlng.lng], 13);
+        getWeather(data.latlng);
+        nearbyStuff(data.latlng, data.criteria);
+        repoReapersAway(data.latlng);
+      });
+      favorites.append(favButton);
+    });
+  }
+}
+fromLocalStorage();
