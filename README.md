@@ -60,4 +60,4 @@ N/A
 - Weather uses current/searched location and pulls current weather -> Check: Good.
 - Searches are saved to local storage -> Check: Good.
 - "Reset Locations" button clears recent searches -> Check: Good.
-- 
+- Chosen points of interest renders nearby locations -> Check: Good.
