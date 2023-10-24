@@ -18,6 +18,9 @@
      }
 
      #reset {
-         background-color: red;
-         border-color: red;
-     }
+        background-color: red;
+        border-color: red;
+        padding: 5px 45px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
