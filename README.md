@@ -11,13 +11,36 @@ N/A
 
 ## Usage
 
-To begin, search a location to explore accomodation and weather. 
+1. To begin, search a location to explore accomodation and weather:
+![Search Bar](/assets/images/readme/searchbar.png)
 
-The user's recent searches will be saved along the right side of the screen and 
+
+2. The user's recent searches will be saved along the right side of the screen below the "Reset Locations" button where one can also clear recent searches:
+![Recent History](/assets/images/readme/recentHistory.png)
+
+
+3. Select the specific point of interest the user is looking for within the drop down on the lower left hand side of the map:
+![Points of Interest](/assets/images/readme/POIbutton.png)
+
+
+4. Lastly, the user can view locations on the map and explore!
+![Explore](/assets/images/readme/explore.png)
 
 ## Credits
 
+### Collaborators
+- Chris Johnson; Github: [C-Johnson83](https://github.com/C-Johnson83)
+- Coty Vuncannon; Github: [CotyV](https://github.com/CotyV)
+- Jacob Sickerman; Github: [IvanDirigible](https://github.com/IvanDirigible)
+- Caleb White; Github: [cwhitecoding](https://github.com/cwhitecoding)
 
+### Resources
+
+1. [GeoLocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
+2. [LocationIQ](https://docs.locationiq.com/docs)
+3. [Leaflet](https://leafletjs.com/reference.html)
+4. [Leaflet Icons](https://leafletjs.com/examples/custom-icons/)
+5. [W3 Schools](https://www.w3schools.com/)
 
 ## License
 
@@ -25,7 +48,16 @@ N/A
 
 ## Features
 
-
+- Location search using a map layout.
+- Searched location current weather displaying temperature, wind, and humidity.
+- Recent searches saved with an option to "Reset Locations".
+- Explore nearby points of interest to searched location.
 
 ## Tests
 
+- Utilized console log within functions to test functionality.
+- Leaflet API rendered map with search bar by trial and error -> Check: Good.
+- Weather uses current/searched location and pulls current weather -> Check: Good.
+- Searches are saved to local storage -> Check: Good.
+- "Reset Locations" button clears recent searches -> Check: Good.
+- 
